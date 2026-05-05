@@ -8,9 +8,12 @@ namespace GestionITM.Domain.Interfaces
     public interface IProfesorService
     {
         /// <summary>Obtiene todos los profesores como DTOs de lectura.</summary>
-        Task<IEnumerable<ProfesorDto>> ObtenerTodoAsync();
+        Task<IEnumerable<ProfesorDto>> ObtenerTodosLosProfesoresAsync();
+
+        /// <summary>Obtiene un profesor por su identificador único.</summary>
+        Task<ProfesorDto?> ObtenerPorIdAsync(int id);
 
         /// <summary>Registra un nuevo profesor aplicando las reglas de negocio.</summary>
-        Task AgregarAsync(ProfesorCreateDto dto);
+        Task RegistrarProfesorAsync(ProfesorCreateDto dto);
     }
 }

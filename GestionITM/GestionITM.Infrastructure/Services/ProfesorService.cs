@@ -20,14 +20,21 @@ namespace GestionITM.Infrastructure.Services
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<ProfesorDto>> ObtenerTodoAsync()
+        public async Task<IEnumerable<ProfesorDto>> ObtenerTodosLosProfesoresAsync()
         {
             var profesores = await _repository.ObtenerTodoAsync();
             return _mapper.Map<IEnumerable<ProfesorDto>>(profesores);
         }
 
         /// <inheritdoc />
-        public async Task AgregarAsync(ProfesorCreateDto dto)
+        public async Task<ProfesorDto?> ObtenerPorIdAsync(int id)
+        {
+            var profesor = await _repository.ObtenerPorIdAsync(id);
+            return profesor is null ? null : _mapper.Map<ProfesorDto>(profesor);
+        }
+
+        /// <inheritdoc />
+        public async Task RegistrarProfesorAsync(ProfesorCreateDto dto)
         {
             // Reto de robustez: provocar error si el nombre es "Error"
             if (dto.Nombre == "Error")

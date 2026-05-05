@@ -23,6 +23,12 @@ namespace GestionITM.Infrastructure.Repositories
         }
 
         /// <inheritdoc />
+        public async Task<Profesor?> ObtenerPorIdAsync(int id)
+        {
+            return await _context.Profesores.FindAsync(id);
+        }
+
+        /// <inheritdoc />
         public async Task AgregarAsync(Profesor profesor)
         {
             await _context.Profesores.AddAsync(profesor);

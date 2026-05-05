@@ -24,15 +24,24 @@ namespace GestionITM.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var profesores = await _service.ObtenerTodoAsync();
+            var profesores = await _service.ObtenerTodosLosProfesoresAsync();
             return Ok(profesores);
+        }
+
+        /// <summary>Obtiene un profesor por su ID.</summary>
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var profesor = await _service.ObtenerPorIdAsync(id);
+            if (profesor is null) return NotFound();
+            return Ok(profesor);
         }
 
         /// <summary>Registra un nuevo profesor en el sistema.</summary>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ProfesorCreateDto dto)
         {
-            await _service.AgregarAsync(dto);
+            await _service.RegistrarProfesorAsync(dto);
             return Created(string.Empty, null);
         }
     }

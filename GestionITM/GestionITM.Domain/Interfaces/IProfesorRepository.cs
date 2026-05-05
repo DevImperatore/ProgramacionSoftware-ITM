@@ -10,6 +10,9 @@ namespace GestionITM.Domain.Interfaces
         /// <summary>Obtiene todos los profesores registrados.</summary>
         Task<IEnumerable<Profesor>> ObtenerTodoAsync();
 
+        /// <summary>Obtiene un profesor por su identificador único.</summary>
+        Task<Profesor?> ObtenerPorIdAsync(int id);
+
         /// <summary>Agrega un nuevo profesor al sistema.</summary>
         Task AgregarAsync(Profesor profesor);
 
