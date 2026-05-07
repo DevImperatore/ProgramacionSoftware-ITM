@@ -1,38 +1,38 @@
 using GestionITM.Domain.Entities;
 using GestionITM.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace GestionITM.Infrastructure.Repositories
 {
-    /// <summary>
-    /// Implementación en memoria del repositorio de cursos.
-    /// </summary>
     public class CursoRepository : ICursoRepository
     {
-        private readonly List<Curso> _cursos = new()
-        {
-            new Curso { Id = 1, Nombre = "Programación de Software", Codigo = "580304006", Creditos = 3 },
-            new Curso { Id = 2, Nombre = "Base de Datos", Codigo = "580304010", Creditos = 3 }
-        };
+        private readonly ApplicationDbContext _context;
 
-        /// <inheritdoc />
-        public Task<IEnumerable<Curso>> ObtenerTodoAsync()
+        public CursoRepository(ApplicationDbContext context)
         {
-            return Task.FromResult<IEnumerable<Curso>>(_cursos);
+            _context = context;
         }
 
-        /// <inheritdoc />
-        public Task<Curso?> ObtenerPorIdAsync(int id)
+        public async Task<IEnumerable<Curso>> ObtenerTodoAsync()
         {
-            var curso = _cursos.FirstOrDefault(c => c.Id == id);
-            return Task.FromResult(curso);
+            return await _context.Cursos.ToListAsync();
         }
 
-        /// <inheritdoc />
-        public Task AgregarAsync(Curso curso)
+        public async Task<Curso?> ObtenerPorIdAsync(int id)
         {
-            curso.Id = _cursos.Max(c => c.Id) + 1;
-            _cursos.Add(curso);
-            return Task.CompletedTask;
+            return await _context.Cursos.FindAsync(id);
+        }
+
+        public async Task AgregarAsync(Curso curso)
+        {
+            await _context.Cursos.AddAsync(curso);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task ActualizarAsync(Curso curso)
+        {
+            _context.Cursos.Update(curso);
+            await _context.SaveChangesAsync();
         }
     }
 }
