@@ -73,6 +73,20 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+    if (!db.Cursos.Any())
+    {
+        db.Cursos.AddRange(
+            new GestionITM.Domain.Entities.Curso { Nombre = "Programación de Software", Codigo = "580304006", Creditos = 3, CuposDisponibles = 30 },
+            new GestionITM.Domain.Entities.Curso { Nombre = "Base de Datos", Codigo = "580304010", Creditos = 3, CuposDisponibles = 0 }
+        );
+        db.SaveChanges();
+    }
+}
+
 // Middleware global de excepciones
 app.UseMiddleware<ExceptionMiddleware>();
 
