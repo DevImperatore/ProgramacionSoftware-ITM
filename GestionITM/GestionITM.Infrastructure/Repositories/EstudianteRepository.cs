@@ -1,37 +1,32 @@
 using GestionITM.Domain.Entities;
 using GestionITM.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace GestionITM.Infrastructure.Repositories
 {
-    /// <summary>
-    /// Implementación en memoria del repositorio de estudiantes.
-    /// </summary>
     public class EstudianteRepository : IEstudianteRepository
     {
-        private readonly List<Estudiante> _estudiantes = new()
-        {
-            new Estudiante { Id = 1, Nombre = "Thomas Reyes", Correo = "thomasreyesr@gmail.com", Telefono = "6045847613" }
-        };
+        private readonly ApplicationDbContext _context;
 
-        /// <inheritdoc />
-        public Task<IEnumerable<Estudiante>> ObtenerTodoAsync()
+        public EstudianteRepository(ApplicationDbContext context)
         {
-            return Task.FromResult<IEnumerable<Estudiante>>(_estudiantes);
+            _context = context;
         }
 
-        /// <inheritdoc />
-        public Task<Estudiante?> ObtenerPorIdAsync(int id)
+        public async Task<IEnumerable<Estudiante>> ObtenerTodoAsync()
         {
-            var estudiante = _estudiantes.FirstOrDefault(e => e.Id == id);
-            return Task.FromResult(estudiante);
+            return await _context.Estudiantes.ToListAsync();
         }
 
-        /// <inheritdoc />
-        public Task AgregarAsync(Estudiante estudiante)
+        public async Task<Estudiante?> ObtenerPorIdAsync(int id)
         {
-            estudiante.Id = _estudiantes.Max(e => e.Id) + 1;
-            _estudiantes.Add(estudiante);
-            return Task.CompletedTask;
+            return await _context.Estudiantes.FindAsync(id);
+        }
+
+        public async Task AgregarAsync(Estudiante estudiante)
+        {
+            await _context.Estudiantes.AddAsync(estudiante);
+            await _context.SaveChangesAsync();
         }
     }
 }
