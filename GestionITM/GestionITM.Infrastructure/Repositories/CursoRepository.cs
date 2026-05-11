@@ -1,3 +1,4 @@
+using GestionITM.Domain.Dtos;
 using GestionITM.Domain.Entities;
 using GestionITM.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,24 @@ namespace GestionITM.Infrastructure.Repositories
         {
             _context.Cursos.Update(curso);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<PagedResult<Curso>> ObtenerPaginadoAsync(int page, int pageSize)
+        {
+            var query = _context.Cursos.AsQueryable();
+            var total = await query.CountAsync();
+            var items = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return new PagedResult<Curso>
+            {
+                Items = items,
+                TotalItems = total,
+                PageNumber = page,
+                PageSize = pageSize
+            };
         }
     }
 }
