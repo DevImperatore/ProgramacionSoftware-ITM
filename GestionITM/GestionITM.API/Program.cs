@@ -4,6 +4,7 @@ using GestionITM.Domain.Interfaces;
 using GestionITM.Infrastructure;
 using GestionITM.Infrastructure.Repositories;
 using GestionITM.Infrastructure.Services;
+using GestionITM.Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -20,12 +21,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IEstudianteRepository, EstudianteRepository>();
 builder.Services.AddScoped<ICursoRepository, CursoRepository>();
 builder.Services.AddScoped<IProfesorRepository, ProfesorRepository>();
+builder.Services.AddScoped<IMatriculaRepository, MatriculaRepository>();
 
 // Servicios
 builder.Services.AddScoped<IProfesorService, ProfesorService>();
+builder.Services.AddScoped<IMatriculaService, MatriculaService>();
 
-// AutoMapper
-builder.Services.AddAutoMapper(typeof(ProfesorProfile));
+// AutoMapper — se usa el assembly completo para que detecte todos los perfiles
+builder.Services.AddAutoMapper(typeof(ProfesorProfile).Assembly);
 
 // Autenticación JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -80,8 +83,8 @@ using (var scope = app.Services.CreateScope())
     if (!db.Cursos.Any())
     {
         db.Cursos.AddRange(
-            new GestionITM.Domain.Entities.Curso { Nombre = "Programación de Software", Codigo = "580304006", Creditos = 3, CuposDisponibles = 30 },
-            new GestionITM.Domain.Entities.Curso { Nombre = "Base de Datos", Codigo = "580304010", Creditos = 3, CuposDisponibles = 0 }
+            new Curso { Nombre = "Programación de Software", Codigo = "580304006", Creditos = 3, CuposDisponibles = 30 },
+            new Curso { Nombre = "Base de Datos", Codigo = "580304010", Creditos = 3, CuposDisponibles = 0 }
         );
         db.SaveChanges();
     }
