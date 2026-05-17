@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:GestionITM.AppMovil.ViewModels"
+             x:Class="GestionITM.AppMovil.Views.LoginPage"
+             Title="Iniciar sesión">
+
+    <VerticalStackLayout Padding="30" Spacing="16" VerticalOptions="Center">
+
+        <Label Text="GestionITM" FontSize="28" FontAttributes="Bold" HorizontalOptions="Center" />
+
+        <Entry Placeholder="Usuario"
+               Text="{Binding Username}"
+               Keyboard="Default" />
+
+        <Entry Placeholder="Contraseña"
+               Text="{Binding Password}"
+               IsPassword="True" />
+
+        <Label Text="{Binding ErrorMessage}"
+               TextColor="Red"
+               IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}" />
+
+        <Button Text="Ingresar"
+                Command="{Binding LoginCommand}"
+                BackgroundColor="#512BD4"
+                TextColor="White" />
+
+    </VerticalStackLayout>
+
+</ContentPage>

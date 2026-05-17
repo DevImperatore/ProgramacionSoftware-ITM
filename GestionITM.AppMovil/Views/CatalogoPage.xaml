@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:GestionITM.AppMovil.ViewModels"
+             xmlns:models="clr-namespace:GestionITM.AppMovil.Models"
+             x:Class="GestionITM.AppMovil.Views.CatalogoPage"
+             Title="Catálogo de Cursos">
+
+    <ContentPage.Triggers>
+        <EventTrigger Event="Appearing">
+            <EventTrigger.Actions>
+                <InvokeCommandAction Command="{Binding CargarCursosCommand}" />
+            </EventTrigger.Actions>
+        </EventTrigger>
+    </ContentPage.Triggers>
+
+    <Grid RowDefinitions="*, Auto">
+
+        <CollectionView Grid.Row="0"
+                        ItemsSource="{Binding Cursos}"
+                        RemainingItemsThreshold="2"
+                        RemainingItemsThresholdReachedCommand="{Binding CargarMasCommand}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:CursoDto">
+                    <Frame Margin="10,6" Padding="12" CornerRadius="8">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding Nombre}" FontAttributes="Bold" FontSize="16" />
+                            <Label Text="{Binding Codigo, StringFormat='Código: {0}'}" TextColor="Gray" />
+                            <Label Text="{Binding Creditos, StringFormat='Créditos: {0}'}" TextColor="Gray" />
+                            <Label Text="{Binding CuposDisponibles, StringFormat='Cupos: {0}'}" TextColor="Gray" />
+                            <Button Text="Matricularme"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CatalogoViewModel}}, Path=MatricularseCommand}"
+                                    CommandParameter="{Binding .}"
+                                    BackgroundColor="#512BD4"
+                                    TextColor="White"
+                                    Margin="0,6,0,0" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <ActivityIndicator Grid.Row="1"
+                           IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           Color="#512BD4"
+                           Margin="0,8" />
+    </Grid>
+
+</ContentPage>

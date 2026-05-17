@@ -1,17 +1,28 @@
 using GestionITM.API.Mappings;
 using GestionITM.API.Middleware;
+using GestionITM.Domain.Entities;
 using GestionITM.Domain.Interfaces;
 using GestionITM.Infrastructure;
 using GestionITM.Infrastructure.Repositories;
 using GestionITM.Infrastructure.Services;
-using GestionITM.Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Serilog.Events;
 using System.Text;
 
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/gestionitm-.log",
+        rollingInterval: RollingInterval.Day,
+        restrictedToMinimumLevel: LogEventLevel.Error)
+    .CreateLogger();
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog();
 
 // Base de datos
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

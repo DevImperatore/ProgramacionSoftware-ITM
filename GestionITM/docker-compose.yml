@@ -1,0 +1,27 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: "${SA_PASSWORD}"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "${SA_PASSWORD}", "-Q", "SELECT 1"]
+      interval: 10s
+      retries: 10
+      start_period: 30s
+
+  api:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_URLS: "http://+:8080"
+      ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=GestionITM;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;"
+      Jwt__Key: "${JWT_KEY}"
+      Jwt__Issuer: "GestionITM.API"
+      Jwt__Audience: "GestionITM.Client"
