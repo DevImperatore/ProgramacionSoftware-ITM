@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
+using System.Security.Claims;
 using System.Text;
 
 Log.Logger = new LoggerConfiguration()
@@ -41,7 +42,10 @@ builder.Services.AddScoped<IMatriculaService, MatriculaService>();
 // AutoMapper — se usa el assembly completo para que detecte todos los perfiles
 builder.Services.AddAutoMapper(typeof(ProfesorProfile).Assembly);
 
-// Autenticación JWT
+// Autenticación JWT — desactivamos el remapeo de claims para que ClaimTypes.Role
+// llegue como "role" y [Authorize(Roles="Estudiante")] funcione
+System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -54,7 +58,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
+            RoleClaimType = ClaimTypes.Role
         };
     });
 
