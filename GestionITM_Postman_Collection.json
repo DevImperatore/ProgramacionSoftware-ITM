@@ -1,0 +1,243 @@
+{
+  "info": {
+    "name": "GestionITM API",
+    "description": "Colección de endpoints del sistema GestionITM — Taller Final Programación de Software ITM 2026",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000", "type": "string" },
+    { "key": "token", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login - Obtener Token JWT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.token) {",
+                  "    pm.collectionVariables.set('token', json.token);",
+                  "    pm.test('Token generado correctamente', () => pm.response.to.have.status(200));",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"estudiante\",\n  \"password\": \"itm2026\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] },
+            "description": "Autenticar con credenciales de estudiante. El token JWT se guarda automáticamente en la variable de colección `token`."
+          }
+        },
+        {
+          "name": "Login - Credenciales Inválidas (401)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"hacker\",\n  \"password\": \"wrong\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] },
+            "description": "Intento de login con credenciales incorrectas. Debe retornar 401 Unauthorized."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profesor",
+      "item": [
+        {
+          "name": "GET Todos los Profesores",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/profesor", "host": ["{{baseUrl}}"], "path": ["api", "profesor"] },
+            "description": "Retorna la lista completa de profesores. Requiere token JWT."
+          }
+        },
+        {
+          "name": "GET Profesor por ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/profesor/1", "host": ["{{baseUrl}}"], "path": ["api", "profesor", "1"] },
+            "description": "Retorna un profesor por su ID. 404 si no existe."
+          }
+        },
+        {
+          "name": "POST Crear Profesor",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Carlos Herrera\",\n  \"especialidad\": \"Ingeniería de Software\",\n  \"email\": \"carlos.herrera@itm.edu.co\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/profesor", "host": ["{{baseUrl}}"], "path": ["api", "profesor"] },
+            "description": "Crea un nuevo profesor. Requiere token JWT."
+          }
+        },
+        {
+          "name": "PUT Actualizar Profesor",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Carlos Herrera Actualizado\",\n  \"especialidad\": \"Arquitectura de Software\",\n  \"email\": \"carlos.herrera@itm.edu.co\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/profesor/1", "host": ["{{baseUrl}}"], "path": ["api", "profesor", "1"] },
+            "description": "Actualiza los datos de un profesor existente."
+          }
+        },
+        {
+          "name": "DELETE Eliminar Profesor",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/profesor/1", "host": ["{{baseUrl}}"], "path": ["api", "profesor", "1"] },
+            "description": "Elimina un profesor por su ID."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Estudiante",
+      "item": [
+        {
+          "name": "GET Todos los Estudiantes",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/estudiante", "host": ["{{baseUrl}}"], "path": ["api", "estudiante"] },
+            "description": "Retorna la lista de estudiantes registrados."
+          }
+        },
+        {
+          "name": "POST Crear Estudiante",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan Pérez\",\n  \"codigo\": \"2260001\",\n  \"email\": \"juan.perez@correo.itm.edu.co\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/estudiante", "host": ["{{baseUrl}}"], "path": ["api", "estudiante"] },
+            "description": "Registra un nuevo estudiante en el sistema."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Curso",
+      "item": [
+        {
+          "name": "GET Todos los Cursos",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/curso", "host": ["{{baseUrl}}"], "path": ["api", "curso"] },
+            "description": "Retorna todos los cursos disponibles con sus cupos."
+          }
+        },
+        {
+          "name": "GET Cursos Paginados",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/curso/paginado?page=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "curso", "paginado"],
+              "query": [
+                { "key": "page", "value": "1", "description": "Número de página (inicia en 1)" },
+                { "key": "pageSize", "value": "10", "description": "Cantidad de registros por página" }
+              ]
+            },
+            "description": "Retorna cursos paginados. Respuesta incluye Items, TotalItems, PageNumber, PageSize y TotalPages."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Matricula",
+      "item": [
+        {
+          "name": "GET Todas las Matrículas",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/matricula", "host": ["{{baseUrl}}"], "path": ["api", "matricula"] },
+            "description": "Retorna todas las matrículas registradas con datos del estudiante y del curso."
+          }
+        },
+        {
+          "name": "POST Matricular - Exitosa (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estudianteId\": 1,\n  \"cursoId\": 1\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/matricula", "host": ["{{baseUrl}}"], "path": ["api", "matricula"] },
+            "description": "Matricula al estudiante 1 en el curso 1 (Programación de Software — 30 cupos). Retorna 201 Created con los datos de la matrícula."
+          }
+        },
+        {
+          "name": "POST Matricular - Sin Cupos (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estudianteId\": 1,\n  \"cursoId\": 2\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/matricula", "host": ["{{baseUrl}}"], "path": ["api", "matricula"] },
+            "description": "Intenta matricular en el curso 2 (Base de Datos — 0 cupos). El ExceptionMiddleware captura la ArgumentException y retorna 400 con el mensaje: 'No hay cupos disponibles en este curso.'"
+          }
+        },
+        {
+          "name": "POST Matricular - Sin Token (401)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estudianteId\": 1,\n  \"cursoId\": 1\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/matricula", "host": ["{{baseUrl}}"], "path": ["api", "matricula"] },
+            "description": "Intento de matrícula sin token JWT. Retorna 401 Unauthorized — el endpoint requiere rol Estudiante."
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestionITM.Infrastructure",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestionITM.API", "GestionITM.API\GestionITM.API.csproj", "{FB2CD1F8-4C99-4D48-B0B1-4E6DE83E7E02}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestionITM.Tests", "GestionITM.Tests\GestionITM.Tests.csproj", "{17AB39E6-2B39-4A13-9BFB-181DBBEDDB06}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{FB2CD1F8-4C99-4D48-B0B1-4E6DE83E7E02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB2CD1F8-4C99-4D48-B0B1-4E6DE83E7E02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB2CD1F8-4C99-4D48-B0B1-4E6DE83E7E02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17AB39E6-2B39-4A13-9BFB-181DBBEDDB06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17AB39E6-2B39-4A13-9BFB-181DBBEDDB06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17AB39E6-2B39-4A13-9BFB-181DBBEDDB06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17AB39E6-2B39-4A13-9BFB-181DBBEDDB06}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
